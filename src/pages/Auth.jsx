@@ -16,9 +16,10 @@ const GoogleIcon = () => (
   </svg>
 );
 
-import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 export default function Auth({ onLogin }) {
+  const { t } = useTranslation();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,7 +39,7 @@ export default function Auth({ onLogin }) {
         
         if (result.success) {
           onLogin(result.user);
-          toast.success(`Welcome back, ${result.user.fullName}!`);
+          toast.success(`${t('dashboard.welcome')}, ${result.user.fullName}!`);
         } else {
           toast.error(result.error);
         }
@@ -79,14 +80,14 @@ export default function Auth({ onLogin }) {
             />
           </div>
           <h1 className="text-3xl font-bold tracking-tight gradient-text">ChequePrint Pro</h1>
-          <p className="text-muted-foreground">{isLogin ? 'Sign in to your account' : 'Create your professional account'}</p>
+          <p className="text-muted-foreground">{isLogin ? t('auth.login') : t('auth.signup')}</p>
         </div>
 
         <div className="card p-8 space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="space-y-2">
-                <label className="text-sm font-medium">Full Name</label>
+                <label className="text-sm font-medium">{t('auth.fullName')}</label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <input 
@@ -101,7 +102,7 @@ export default function Auth({ onLogin }) {
             )}
             
             <div className="space-y-2">
-              <label className="text-sm font-medium">Email Address</label>
+              <label className="text-sm font-medium">{t('auth.email')}</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input 
@@ -116,7 +117,7 @@ export default function Auth({ onLogin }) {
 
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <label className="text-sm font-medium">Password</label>
+                <label className="text-sm font-medium">{t('auth.password')}</label>
                 {isLogin && (
                   <button type="button" className="text-xs text-primary hover:underline">Forgot password?</button>
                 )}
@@ -138,33 +139,33 @@ export default function Auth({ onLogin }) {
               disabled={isLoading}
               className="btn-primary w-full py-3 flex items-center justify-center gap-2 group disabled:opacity-50"
             >
-              {isLoading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
+              {isLoading ? 'Processing...' : (isLogin ? t('auth.submit_login') : t('auth.submit_signup'))}
               {!isLoading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
             </button>
           </form>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10" /></div>
-            <div className="relative flex justify-center text-xs uppercase"><span className="bg-[#0b0b0d] px-2 text-muted-foreground">Or continue with</span></div>
+            <div className="relative flex justify-center text-xs uppercase"><span className="bg-background px-2 text-muted-foreground">Or continue with</span></div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <button className="card py-2 flex items-center justify-center gap-2 hover:bg-white/10 p-0">
+            <button className="card py-2 flex items-center justify-center gap-2 hover:bg-secondary p-0">
               <GithubIcon /> Github
             </button>
-            <button className="card py-2 flex items-center justify-center gap-2 hover:bg-white/10 p-0">
+            <button className="card py-2 flex items-center justify-center gap-2 hover:bg-secondary p-0">
               <GoogleIcon /> Google
             </button>
           </div>
         </div>
 
         <p className="text-center mt-8 text-sm text-muted-foreground">
-          {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
+          {isLogin ? t('auth.toggle_signup').split('?')[0] + '?' : t('auth.toggle_login').split('?')[0] + '?'} {' '}
           <button 
             onClick={() => setIsLogin(!isLogin)}
             className="text-primary font-bold hover:underline"
           >
-            {isLogin ? 'Sign up' : 'Log in'}
+            {isLogin ? t('auth.submit_signup') : t('auth.submit_login')}
           </button>
         </p>
       </div>

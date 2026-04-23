@@ -70,37 +70,62 @@ export default function ChequePreview() {
     }
   };
 
-  const getBgImage = () => {
-    if (activeCheque.bank_code === 'SBI') return '/src/assets/cheque_sbi.png';
-    if (activeCheque.bank_code === 'HDFC') return '/src/assets/cheque_hdfc.png';
-    return ''; // Fallback to blank
+  const getBgTexture = () => {
+    if (activeCheque.bank_code === 'ICICI') return '/src/assets/texture_beige.png';
+    return '/src/assets/texture_blue.png';
+  };
+
+  const getBankLogo = () => {
+    if (activeCheque.bank_code === 'SBI') return '/src/assets/logo_sbi.png';
+    if (activeCheque.bank_code === 'HDFC') return '/src/assets/logo_hdfc.png';
+    if (activeCheque.bank_code === 'ICICI') return '/src/assets/logo_icici.png';
+    return '';
+  };
+
+  const getBankColor = () => {
+    if (activeCheque.bank_code === 'SBI') return 'text-[#2563eb]';
+    if (activeCheque.bank_code === 'HDFC') return 'text-[#1e293b]';
+    if (activeCheque.bank_code === 'ICICI') return 'text-[#9a3412]';
+    return 'text-black';
   };
 
   return (
-    <div className="relative overflow-auto p-8 flex justify-center bg-muted/50 rounded-[2.5rem] border border-border shadow-inner">
+    <div className="relative overflow-auto p-12 flex justify-center bg-muted/30 rounded-[3rem] border border-border/50 shadow-2xl">
       <div 
-        className="relative bg-white text-black shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-sm transition-all duration-500 overflow-hidden border border-black/5"
+        className="relative bg-white text-black shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] rounded-sm transition-all duration-700 overflow-hidden border border-black/10"
         style={{ 
           width: `${width}px`, 
           height: `${height}px`,
-          backgroundImage: `url(${getBgImage()})`,
-          backgroundSize: '100% 100%',
+          backgroundImage: `url(${getBgTexture()})`,
+          backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat'
         }}
       >
-        {!getBgImage() && (
-          <div className="absolute inset-0 opacity-5" style={{ 
-            backgroundImage: 'radial-gradient(#000 0.5px, transparent 0.5px)',
-            backgroundSize: '10px 10px'
-          }} />
-        )}
-
-        {/* Bank Name fallback if no image */}
-        {!getBgImage() && (
-          <div className="absolute top-4 left-6 text-sm font-bold uppercase tracking-tight opacity-20">
-            {template.bank_name}
+        {/* Bank Identity Section */}
+        <div className="absolute top-4 left-6 flex items-center gap-4 group">
+          {getBankLogo() && (
+            <img 
+              src={getBankLogo()} 
+              alt="Bank Logo" 
+              className="w-10 h-10 object-contain drop-shadow-sm transition-transform duration-500 group-hover:scale-110" 
+            />
+          )}
+          <div>
+            <h4 className={`text-sm font-black uppercase tracking-tighter leading-tight ${getBankColor()}`}>
+              {template.bank_name}
+            </h4>
+            <p className="text-[8px] font-bold text-black/40 uppercase tracking-[0.2em]">ChequePrint Pro System</p>
           </div>
-        )}
+        </div>
+
+        {/* Date Boxes Mockup (Common in realistic cheques) */}
+        <div className="absolute top-4 right-6 flex gap-1">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="w-6 h-8 border border-black/20 flex items-center justify-center font-mono text-xs">
+              {/* Box container */}
+            </div>
+          ))}
+        </div>
 
         {/* Fields */}
         {template.fields.map((field, idx) => {
@@ -112,7 +137,7 @@ export default function ChequePreview() {
                 key={idx}
                 src={value}
                 alt="Signature"
-                className="absolute mix-blend-multiply transition-all duration-300 pointer-events-none"
+                className="absolute mix-blend-multiply transition-all duration-500 pointer-events-none"
                 style={{
                   left: `${field.x_mm * scale}px`,
                   top: `${field.y_mm * scale}px`,
@@ -133,18 +158,29 @@ export default function ChequePreview() {
                 left: `${field.x_mm * scale}px`,
                 top: `${field.y_mm * scale}px`,
                 maxWidth: field.max_width_mm ? `${field.max_width_mm * scale}px` : 'none',
-                fontSize: `${field.font_size * 1.3}px`, 
+                fontSize: `${field.font_size * 1.4}px`, 
                 fontWeight: field.is_bold ? '700' : '500',
-                color: value ? '#1a1a1a' : 'rgba(0,0,0,0.05)',
-                letterSpacing: isDate ? '0.5em' : 'normal',
-                transform: value ? 'none' : 'translateY(2px)',
+                color: value ? '#000' : 'rgba(0,0,0,0.03)',
+                letterSpacing: isDate ? '0.6em' : 'normal',
+                transform: value ? 'none' : 'translateY(1px)',
                 opacity: value ? 1 : 0.5
               }}
             >
-              {value || (getBgImage() ? '' : field.field_name)}
+              {value || (isDate ? '0' : field.field_name)}
             </div>
           );
         })}
+
+        {/* Decorative elements (Realistic bottom MICR area) */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 w-full px-12">
+          <div className="flex justify-between w-full opacity-40">
+             <div className="w-32 border-b border-black/20 text-[6px] text-center uppercase font-bold">Authorized Signatory</div>
+             <div className="w-32 border-b border-black/20 text-[6px] text-center uppercase font-bold">Please sign above</div>
+          </div>
+          <div className="font-mono text-xs tracking-[0.5em] opacity-30">
+            " 000000 " 000000000 |: 000000 |' 00
+          </div>
+        </div>
       </div>
     </div>
   );

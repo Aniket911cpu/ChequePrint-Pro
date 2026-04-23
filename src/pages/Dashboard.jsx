@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   TrendingUp, 
   Users, 
@@ -10,13 +11,6 @@ import {
   CreditCard
 } from 'lucide-react';
 
-const stats = [
-  { label: 'Total Printed', value: '1,284', change: '+12%', icon: CheckCircle, color: 'text-green-500' },
-  { label: 'Active Payees', value: '450', change: '+5.4%', icon: Users, color: 'text-blue-500' },
-  { label: 'Pending Batch', value: '12', change: '-2%', icon: Clock, color: 'text-amber-500' },
-  { label: 'System Health', value: '99.9%', change: 'Optimal', icon: Shield, color: 'text-purple-500' },
-];
-
 const recentActivity = [
   { id: 1, payee: 'John Doe', amount: '₹12,000.00', date: '2 mins ago', status: 'Success' },
   { id: 2, payee: 'Acme Corp', amount: '₹45,500.00', date: '1 hour ago', status: 'Success' },
@@ -25,11 +19,20 @@ const recentActivity = [
 ];
 
 export default function Dashboard({ user }) {
+  const { t } = useTranslation();
+
+  const stats = [
+    { label: t('dashboard.stats.total'), value: '1,284', change: '+12%', icon: CheckCircle, color: 'text-green-500' },
+    { label: t('dashboard.stats.active'), value: '450', change: '+5.4%', icon: Users, color: 'text-blue-500' },
+    { label: t('dashboard.stats.pending'), value: '12', change: '-2%', icon: Clock, color: 'text-amber-500' },
+    { label: t('dashboard.stats.health'), value: '99.9%', change: 'Optimal', icon: Shield, color: 'text-purple-500' },
+  ];
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div>
-        <h2 className="text-3xl font-bold gradient-text">Welcome back, {user?.fullName || 'User'}</h2>
-        <p className="text-muted-foreground">Here is what's happening with your cheque printing system today.</p>
+        <h2 className="text-3xl font-bold gradient-text">{t('dashboard.welcome')}, {user?.fullName || 'User'}</h2>
+        <p className="text-muted-foreground">{t('dashboard.subtitle')}</p>
       </div>
 
       {/* Stats Grid */}

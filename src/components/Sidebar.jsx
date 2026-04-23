@@ -18,12 +18,14 @@ import {
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { useTranslation } from 'react-i18next';
 
 function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
 export default function Sidebar({ onLogout, user }) {
+  const { t, i18n } = useTranslation();
   const [isDark, setIsDark] = React.useState(() => document.documentElement.classList.contains('dark'));
 
   const toggleTheme = () => {
@@ -38,19 +40,23 @@ export default function Sidebar({ onLogout, user }) {
     }
   };
 
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
   const isAdmin = user?.role === 'Admin';
 
   const mainNav = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-    { icon: Printer, label: 'Print Cheque', path: '/print' },
-    { icon: Files, label: 'Batch Print', path: '/batch' },
-    { icon: History, label: 'History', path: '/history' },
+    { icon: LayoutDashboard, label: t('common.dashboard'), path: '/dashboard' },
+    { icon: Printer, label: t('common.print'), path: '/print' },
+    { icon: Files, label: t('common.batch'), path: '/batch' },
+    { icon: History, label: t('common.history'), path: '/history' },
   ];
 
   const adminNav = [
-    { icon: LayoutTemplate, label: 'Templates', path: '/templates' },
-    { icon: Server, label: 'Systems', path: '/systems' },
-    { icon: Users, label: 'User Mgmt', path: '/admin/users' },
+    { icon: LayoutTemplate, label: t('common.templates'), path: '/templates' },
+    { icon: Server, label: t('common.systems'), path: '/systems' },
+    { icon: Users, label: t('common.users'), path: '/admin/users' },
   ];
 
   return (
@@ -74,7 +80,7 @@ export default function Sidebar({ onLogout, user }) {
       </div>
 
       <nav className="flex-1 px-4 py-6 flex flex-col gap-1 overflow-y-auto">
-        <p className="px-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Main Menu</p>
+        <p className="px-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">{t('common.main_menu') || 'Main Menu'}</p>
         {mainNav.map((item) => (
           <NavLink
             key={item.path}
@@ -92,7 +98,7 @@ export default function Sidebar({ onLogout, user }) {
 
         {isAdmin && (
           <>
-            <p className="px-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-6 mb-2">System Admin</p>
+            <p className="px-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-6 mb-2">{t('common.admin')}</p>
             {adminNav.map((item) => (
               <NavLink
                 key={item.path}
@@ -110,9 +116,30 @@ export default function Sidebar({ onLogout, user }) {
         )}
       </nav>
 
-      <div className="p-6 mt-auto space-y-4">
+      <div className="p-6 mt-auto space-y-3">
+        <div className="flex items-center justify-between p-1 rounded-2xl bg-secondary/50 border border-border">
+          <button 
+            onClick={() => changeLanguage('en')}
+            className={cn(
+              "flex-1 py-1.5 text-[10px] font-black rounded-xl transition-all",
+              i18n.language === 'en' ? "bg-background shadow-sm text-primary" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            EN
+          </button>
+          <button 
+            onClick={() => changeLanguage('hi')}
+            className={cn(
+              "flex-1 py-1.5 text-[10px] font-black rounded-xl transition-all",
+              i18n.language === 'hi' ? "bg-background shadow-sm text-primary" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            HI
+          </button>
+        </div>
+
         <div className="flex items-center justify-between p-2 rounded-2xl bg-secondary/50 border border-border">
-          <span className="text-xs font-bold px-2 text-muted-foreground uppercase tracking-tighter">Theme</span>
+          <span className="text-xs font-bold px-2 text-muted-foreground uppercase tracking-tighter">{t('common.theme') || 'Theme'}</span>
           <button 
             onClick={toggleTheme}
             className="p-2 rounded-xl bg-background shadow-sm hover:scale-110 transition-transform text-primary"
@@ -126,7 +153,7 @@ export default function Sidebar({ onLogout, user }) {
           className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-destructive/10 hover:text-destructive text-muted-foreground font-medium text-sm"
         >
           <LogOut className="w-5 h-5" />
-          Sign Out
+          {t('common.logout')}
         </button>
       </div>
     </aside>

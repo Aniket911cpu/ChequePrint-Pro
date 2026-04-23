@@ -1,0 +1,51 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "print": "Print Cheque",
+    "batch": "Batch Print",
+    "history": "History",
+    "templates": "Templates",
+    "systems": "Systems",
+    "pricing": "Plans & Pricing",
+    "settings": "Settings",
+    "logout": "Sign Out",
+    "admin": "System Admin",
+    "users": "User Mgmt"
+  },
+  "dashboard": {
+    "welcome": "Welcome back",
+    "subtitle": "Here is what's happening with your cheque printing system today.",
+    "stats": {
+      "total": "Total Printed",
+      "active": "Active Payees",
+      "pending": "Pending Batch",
+      "health": "System Health"
+    }
+  },
+  "print": {
+    "title": "Print Cheque",
+    "subtitle": "Professional single-leaf banking stationery printing.",
+    "form": {
+      "template": "Bank Template",
+      "printer": "Target Printer",
+      "payee": "Payee Name",
+      "amount": "Amount",
+      "date": "Cheque Date",
+      "words": "Legal Amount in Words",
+      "signature": "Digital Signature",
+      "submit": "Authorize & Print",
+      "reset": "Reset Layout"
+    }
+  },
+  "auth": {
+    "login": "Sign in to your account",
+    "signup": "Create your professional account",
+    "email": "Email Address",
+    "password": "Password",
+    "fullName": "Full Name",
+    "submit_login": "Sign In",
+    "submit_signup": "Create Account",
+    "toggle_login": "Already have an account? Sign In",
+    "toggle_signup": "Don't have an account? Create one"
+  }
+}
