@@ -70,7 +70,9 @@ export default function ChequePreview() {
   };
 
   const getBgTexture = () => {
-    if (activeCheque.bank_code === 'ICICI') return '/src/assets/texture_beige.png';
+    const lightBlue = ['SBI', 'HDFC', 'YES', 'CANARA', 'UNION', 'CENTRAL', 'IDBI', 'SIBK', 'INDUSIND'];
+    const beige = ['ICICI', 'AXIS', 'CITI', 'BOI', 'HSBC'];
+    if (beige.includes(activeCheque.bank_code)) return '/src/assets/texture_beige.png';
     return '/src/assets/texture_blue.png';
   };
 
@@ -78,14 +80,33 @@ export default function ChequePreview() {
     if (activeCheque.bank_code === 'SBI') return '/src/assets/logo_sbi.png';
     if (activeCheque.bank_code === 'HDFC') return '/src/assets/logo_hdfc.png';
     if (activeCheque.bank_code === 'ICICI') return '/src/assets/logo_icici.png';
+    if (activeCheque.bank_code === 'AXIS') return '/src/assets/logo_axis.png';
+    if (activeCheque.bank_code === 'BOI') return '/src/assets/logo_boi.png';
+    if (activeCheque.bank_code === 'YES') return '/src/assets/logo_yes.png';
+    if (activeCheque.bank_code === 'CANARA') return '/src/assets/logo_canara.png';
+    if (activeCheque.bank_code === 'CITI') return '/src/assets/logo_citi.png';
+    if (activeCheque.bank_code === 'HSBC') return '/src/assets/logo_hsbc.png';
     return '';
   };
 
   const getBankColor = () => {
-    if (activeCheque.bank_code === 'SBI') return 'text-[#2563eb]';
-    if (activeCheque.bank_code === 'HDFC') return 'text-[#1e293b]';
-    if (activeCheque.bank_code === 'ICICI') return 'text-[#9a3412]';
-    return 'text-black';
+    const colors = {
+      SBI: 'text-[#2563eb]',
+      HDFC: 'text-[#1e293b]',
+      ICICI: 'text-[#9a3412]',
+      AXIS: 'text-[#8b1a47]',
+      BOI: 'text-[#003399]',
+      YES: 'text-[#005aab]',
+      CANARA: 'text-[#0091d5]',
+      CITI: 'text-[#003b70]',
+      HSBC: 'text-[#db0011]',
+      UNION: 'text-[#ed1c24]',
+      CENTRAL: 'text-[#0055a5]',
+      IDBI: 'text-[#006837]',
+      SIBK: 'text-[#ed1c24]',
+      INDUSIND: 'text-[#8b1a47]'
+    };
+    return colors[activeCheque.bank_code] || 'text-black';
   };
 
   return (
