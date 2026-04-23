@@ -6,10 +6,12 @@ import { useChequeStore } from '../store/useChequeStore';
 import { numberToIndianWords } from '../lib/numberToWords';
 import { bankTemplates } from '../data/bankTemplates';
 import ChequePreview from '../components/ChequePreview';
-import { Printer, Save, RotateCcw } from 'lucide-react';
+import { Printer, Save, RotateCcw, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 export default function PrintCheque() {
+  const { t } = useTranslation();
   const { activeCheque, updateCheque, resetCheque } = useChequeStore();
   
   const {

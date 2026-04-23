@@ -120,13 +120,21 @@ export default function Onboarding({ onComplete }) {
               <ChevronLeft className="w-6 h-6" />
             </button>
             
-            <button 
-              onClick={next}
-              className="btn-primary flex items-center gap-2 py-3 px-8"
-            >
-              {currentStep === steps.length - 1 ? 'Get Started' : 'Next Step'}
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="flex gap-4">
+              <button 
+                onClick={onComplete}
+                className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest px-4"
+              >
+                Skip
+              </button>
+              <button 
+                onClick={next}
+                className="btn-primary flex items-center gap-2 py-3 px-8"
+              >
+                {currentStep === steps.length - 1 ? 'Get Started' : 'Next Step'}
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

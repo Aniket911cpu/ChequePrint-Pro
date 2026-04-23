@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Download, Search, Filter, CheckCircle2, MoreVertical, FileText } from 'lucide-react';
+import { Download, Search, Filter, CheckCircle2, MoreVertical, FileText, History as HistoryIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { jsPDF } from 'jspdf';
@@ -105,7 +105,7 @@ export default function History() {
             </div>
           ) : filteredRecords.length === 0 ? (
             <div className="h-[400px] flex flex-col items-center justify-center text-muted-foreground text-center">
-              <History className="w-12 h-12 mb-4 opacity-10" />
+              <HistoryIcon className="w-12 h-12 mb-4 opacity-10" />
               <p>No records found</p>
             </div>
           ) : (

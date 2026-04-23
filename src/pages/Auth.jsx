@@ -157,6 +157,15 @@ export default function Auth({ onLogin }) {
               <GoogleIcon /> Google
             </button>
           </div>
+
+          <div className="pt-4 text-center">
+            <button 
+              onClick={() => onLogin({ id: 'test', fullName: 'Test Admin', email: 'test@chequeprint.pro', role: 'Admin' })}
+              className="text-[10px] font-bold text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors"
+            >
+              Skip Sign In (Dev Mode)
+            </button>
+          </div>
         </div>
 
         <p className="text-center mt-8 text-sm text-muted-foreground">

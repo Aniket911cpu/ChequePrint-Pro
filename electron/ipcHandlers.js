@@ -114,6 +114,5 @@ ipcMain.handle('sys:getStats', () => {
 });
 
 ipcMain.handle('print:getPrinters', async (event) => {
-  const win = new BrowserWindow({ show: false });
-  return await win.webContents.getPrintersAsync();
+  return await event.sender.getPrintersAsync();
 });

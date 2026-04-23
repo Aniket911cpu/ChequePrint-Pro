@@ -20,6 +20,14 @@ export default function Systems() {
     refetchInterval: 5000 // Refresh every 5 seconds
   });
 
+  const logs = [
+    { time: '12:45:01', system: 'DB', status: 'success', event: 'Vacuum maintenance completed' },
+    { time: '12:44:38', system: 'PRINT', status: 'success', event: 'Job #4521 sent to laser-jet-01' },
+    { time: '12:40:12', system: 'SYNC', status: 'warning', event: 'Packet loss detected on backup node' },
+    { time: '12:35:55', system: 'SEC', status: 'success', event: 'Admin credentials verified' },
+    { time: '12:30:00', system: 'DB', status: 'success', event: 'Scheduled backup snapshot created' },
+  ];
+
   const systems = [
     { 
       name: 'Core Database', 

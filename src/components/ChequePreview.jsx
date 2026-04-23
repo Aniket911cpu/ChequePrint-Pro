@@ -6,6 +6,25 @@ import { numberToIndianWords } from '../lib/numberToWords';
 export default function ChequePreview() {
   const { activeCheque } = useChequeStore();
   const template = bankTemplates.find(t => t.bank_code === activeCheque.bank_code);
+  const [sigUrl, setSigUrl] = React.useState('');
+
+  React.useEffect(() => {
+    const loadSignature = async () => {
+      if (activeCheque.signature) {
+        try {
+          const buffer = await window.electronAPI.readFileBinary(activeCheque.signature);
+          const blob = new Blob([buffer]);
+          const url = URL.createObjectURL(blob);
+          setSigUrl(url);
+        } catch (e) {
+          console.error('Failed to load signature', e);
+        }
+      } else {
+        setSigUrl('');
+      }
+    };
+    loadSignature();
+  }, [activeCheque.signature]);
 
   if (!template) {
     return (
@@ -36,26 +55,6 @@ export default function ChequePreview() {
   const amountWords = activeCheque.amount 
     ? numberToIndianWords(Number(activeCheque.amount)) 
     : '';
-
-  const [sigUrl, setSigUrl] = React.useState('');
-
-  React.useEffect(() => {
-    const loadSignature = async () => {
-      if (activeCheque.signature) {
-        try {
-          const buffer = await window.electronAPI.readFileBinary(activeCheque.signature);
-          const blob = new Blob([buffer]);
-          const url = URL.createObjectURL(blob);
-          setSigUrl(url);
-        } catch (e) {
-          console.error('Failed to load signature', e);
-        }
-      } else {
-        setSigUrl('');
-      }
-    };
-    loadSignature();
-  }, [activeCheque.signature]);
 
   const getFieldValue = (fieldName) => {
     switch (fieldName) {
