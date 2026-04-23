@@ -65,12 +65,20 @@ export default function History() {
           <h2 className="text-3xl font-bold gradient-text">Print History</h2>
           <p className="text-muted-foreground">Audit trail of all issued cheques</p>
         </div>
-        <button 
-          onClick={handleExport}
-          className="btn-primary flex items-center gap-2"
-        >
-          <Download className="w-4 h-4" /> Export CSV
-        </button>
+        <div className="flex gap-3">
+          <button 
+            onClick={handleExportCSV}
+            className="btn-primary bg-white/5 border border-white/10 text-foreground hover:bg-white/10 flex items-center gap-2"
+          >
+            <Download className="w-4 h-4" /> Export CSV
+          </button>
+          <button 
+            onClick={handleExportPDF}
+            className="btn-primary flex items-center gap-2"
+          >
+            <FileText className="w-4 h-4" /> PDF Report
+          </button>
+        </div>
       </div>
 
       <div className="card space-y-6">

@@ -37,9 +37,11 @@ export default function Sidebar({ onLogout }) {
       <div className="p-8 flex items-center gap-4">
         <div className="relative group">
           <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full group-hover:bg-primary/40 transition-all duration-500" />
-          <div className="relative gradient-bg p-2.5 rounded-2xl shadow-xl shadow-primary/20">
-            <ShieldCheck className="w-8 h-8 text-white" />
-          </div>
+          <img 
+            src="/src/assets/logo.png" 
+            alt="ChequePrint Pro Logo" 
+            className="relative w-12 h-12 object-contain rounded-2xl shadow-xl shadow-primary/20"
+          />
         </div>
         <div>
           <div className="flex items-center gap-2">

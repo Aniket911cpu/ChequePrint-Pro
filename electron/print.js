@@ -84,6 +84,16 @@ function generateFieldHTML(fields, template, offsets) {
     const value = fields[field.field_name] || '';
     const x = field.x_mm + (offsets?.x_mm || 0);
     const y = field.y_mm + (offsets?.y_mm || 0);
+    
+    if (field.field_name === 'signature' && value) {
+      return `<img src="file://${value}" class="field" style="
+        left: ${x}mm;
+        top: ${y}mm;
+        width: ${field.max_width_mm || 40}mm;
+        height: auto;
+      " />`;
+    }
+
     return `<div class="field" style="
       left: ${x}mm;
       top: ${y}mm;

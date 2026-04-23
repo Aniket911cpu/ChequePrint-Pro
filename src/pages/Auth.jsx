@@ -71,8 +71,12 @@ export default function Auth({ onLogin }) {
 
       <div className="w-full max-w-md animate-in fade-in zoom-in duration-500">
         <div className="text-center mb-8 space-y-2">
-          <div className="inline-flex p-3 rounded-2xl bg-primary/10 mb-4">
-            <ShieldCheck className="w-10 h-10 text-primary" />
+          <div className="inline-flex mb-4">
+            <img 
+              src="/src/assets/logo.png" 
+              alt="ChequePrint Pro Logo" 
+              className="w-20 h-20 object-contain rounded-3xl shadow-2xl shadow-primary/30 animate-float"
+            />
           </div>
           <h1 className="text-3xl font-bold tracking-tight gradient-text">ChequePrint Pro</h1>
           <p className="text-muted-foreground">{isLogin ? 'Sign in to your account' : 'Create your professional account'}</p>
