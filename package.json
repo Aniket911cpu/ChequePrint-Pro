@@ -4,7 +4,7 @@
   "description": "ChequePrint Pro — System Architecture & Developer Reference",
   "main": "electron/main.js",
   "scripts": {
-    "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "dev": "concurrently \"cross-env NODE_ENV=development vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
     "build": "vite build && electron-builder",
     "postinstall": "electron-rebuild -f -w better-sqlite3",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -38,6 +38,7 @@
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "concurrently": "^9.1.0",
+    "cross-env": "^10.1.0",
     "electron": "^32.3.3",
     "electron-builder": "^24.13.3",
     "electron-rebuild": "^3.2.9",

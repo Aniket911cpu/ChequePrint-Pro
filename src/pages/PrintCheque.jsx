@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { chequeSchema } from '../lib/validation';
 import { useChequeStore } from '../store/useChequeStore';
@@ -18,21 +18,24 @@ export default function PrintCheque() {
     watch,
     setValue,
     reset,
+    control,
     formState: { errors }
   } = useForm({
     resolver: zodResolver(chequeSchema),
     defaultValues: activeCheque
   });
 
-  const watchedFields = watch();
-
+  // Subscription-based watch — fires only when values actually change, no re-render loop
   useEffect(() => {
-    updateCheque(watchedFields);
-  }, [watchedFields, updateCheque]);
+    const subscription = watch((data) => {
+      updateCheque(data);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, updateCheque]);
 
-  const amountInWords = watchedFields.amount 
-    ? numberToIndianWords(Number(watchedFields.amount))
-    : '';
+  // Stable reactive read for the amount field only
+  const amount = useWatch({ control, name: 'amount' });
+  const amountInWords = amount ? numberToIndianWords(Number(amount)) : '';
 
   const onSubmit = async (data) => {
     try {
