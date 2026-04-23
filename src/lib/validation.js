@@ -9,6 +9,7 @@ export const chequeSchema = z.object({
   ifsc_code: z.string().optional(),
   narration: z.string().optional(),
   bank_code: z.string().min(1, 'Bank is required'),
+  signature: z.string().optional(),
 });
 
 export const settingsSchema = z.object({

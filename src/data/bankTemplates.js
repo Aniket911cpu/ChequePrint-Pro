@@ -11,7 +11,8 @@ export const bankTemplates = [
       { field_name: 'amount_words', x_mm: 10, y_mm: 38, max_width_mm: 155, font_size: 10, is_bold: 0 },
       { field_name: 'date_dd', x_mm: 136, y_mm: 8, max_width_mm: 8, font_size: 11, is_bold: 0 },
       { field_name: 'date_mm', x_mm: 148, y_mm: 8, max_width_mm: 8, font_size: 11, is_bold: 0 },
-      { field_name: 'date_yyyy', x_mm: 158, y_mm: 8, max_width_mm: 16, font_size: 11, is_bold: 0 }
+      { field_name: 'date_yyyy', x_mm: 158, y_mm: 8, max_width_mm: 16, font_size: 11, is_bold: 0 },
+      { field_name: 'signature', x_mm: 130, y_mm: 60, max_width_mm: 40, font_size: 10, is_bold: 0 }
     ]
   },
   {
@@ -26,7 +27,8 @@ export const bankTemplates = [
       { field_name: 'amount_words', x_mm: 15, y_mm: 35, max_width_mm: 150, font_size: 10, is_bold: 0 },
       { field_name: 'date_dd', x_mm: 140, y_mm: 5, max_width_mm: 8, font_size: 11, is_bold: 0 },
       { field_name: 'date_mm', x_mm: 150, y_mm: 5, max_width_mm: 8, font_size: 11, is_bold: 0 },
-      { field_name: 'date_yyyy', x_mm: 160, y_mm: 5, max_width_mm: 14, font_size: 11, is_bold: 0 }
+      { field_name: 'date_yyyy', x_mm: 160, y_mm: 5, max_width_mm: 14, font_size: 11, is_bold: 0 },
+      { field_name: 'signature', x_mm: 135, y_mm: 55, max_width_mm: 35, font_size: 10, is_bold: 0 }
     ]
   },
   {
@@ -41,7 +43,8 @@ export const bankTemplates = [
       { field_name: 'amount_words', x_mm: 10, y_mm: 40, max_width_mm: 160, font_size: 10, is_bold: 0 },
       { field_name: 'date_dd', x_mm: 145, y_mm: 10, max_width_mm: 8, font_size: 11, is_bold: 0 },
       { field_name: 'date_mm', x_mm: 155, y_mm: 10, max_width_mm: 8, font_size: 11, is_bold: 0 },
-      { field_name: 'date_yyyy', x_mm: 165, y_mm: 10, max_width_mm: 12, font_size: 11, is_bold: 0 }
+      { field_name: 'date_yyyy', x_mm: 165, y_mm: 10, max_width_mm: 12, font_size: 11, is_bold: 0 },
+      { field_name: 'signature', x_mm: 140, y_mm: 65, max_width_mm: 30, font_size: 10, is_bold: 0 }
     ]
   }
 ];

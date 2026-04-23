@@ -81,6 +81,18 @@ export function initDatabase() {
     )
   `).run();
 
+  // Users table
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS users (
+      id         INTEGER PRIMARY KEY AUTOINCREMENT,
+      full_name  TEXT NOT NULL,
+      email      TEXT UNIQUE NOT NULL,
+      password   TEXT NOT NULL,
+      role       TEXT DEFAULT 'Admin' CHECK(role IN ('Admin','Manager','Printer')),
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `).run();
+
   seedDefaults();
 }
 

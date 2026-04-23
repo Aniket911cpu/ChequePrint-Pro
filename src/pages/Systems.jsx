@@ -11,49 +11,50 @@ import {
   Network
 } from 'lucide-react';
 
-const systems = [
-  { 
-    name: 'Core Database', 
-    status: 'Healthy', 
-    uptime: '99.9%', 
-    load: '12%', 
-    icon: Database,
-    description: 'Main SQLite storage for cheque records and templates.'
-  },
-  { 
-    name: 'Print Engine', 
-    status: 'Active', 
-    uptime: '100%', 
-    load: '5%', 
-    icon: Cpu,
-    description: 'PDF generation and hardware communication layer.'
-  },
-  { 
-    name: 'Cloud Sync', 
-    status: 'Syncing', 
-    uptime: '98.5%', 
-    load: '45%', 
-    icon: Network,
-    description: 'Real-time backup and multi-device synchronization.'
-  },
-  { 
-    name: 'Security Shield', 
-    status: 'Active', 
-    uptime: '100%', 
-    load: '2%', 
-    icon: Shield,
-    description: 'Encryption and user access control management.'
-  },
-];
-
-const logs = [
-  { time: '10:45:22', event: 'Database backup completed', system: 'Cloud Sync', status: 'info' },
-  { time: '10:42:10', event: 'New bank template added: SBI Rev 2', system: 'Print Engine', status: 'success' },
-  { time: '10:30:05', event: 'Unauthorized access attempt blocked', system: 'Security', status: 'warning' },
-  { time: '09:15:40', event: 'System maintenance scheduled for 02:00', system: 'Core', status: 'info' },
-];
+import { useQuery } from '@tanstack/react-query';
 
 export default function Systems() {
+  const { data: stats } = useQuery({
+    queryKey: ['system_stats'],
+    queryFn: () => window.electronAPI.getSystemStats(),
+    refetchInterval: 5000 // Refresh every 5 seconds
+  });
+
+  const systems = [
+    { 
+      name: 'Core Database', 
+      status: 'Healthy', 
+      uptime: stats ? `${Math.floor(stats.uptime / 3600)}h ${Math.floor((stats.uptime % 3600) / 60)}m` : '...', 
+      load: stats ? stats.dbSize : '...', 
+      icon: Database,
+      description: `SQLite storage with ${stats?.recordCount || 0} records.`
+    },
+    { 
+      name: 'Print Engine', 
+      status: 'Active', 
+      uptime: '100%', 
+      load: stats ? stats.memory : '...', 
+      icon: Cpu,
+      description: 'PDF generation and hardware communication layer.'
+    },
+    { 
+      name: 'Cloud Sync', 
+      status: 'Syncing', 
+      uptime: '98.5%', 
+      load: '45%', 
+      icon: Network,
+      description: 'Real-time backup and multi-device synchronization.'
+    },
+    { 
+      name: 'Security Shield', 
+      status: 'Active', 
+      uptime: '100%', 
+      load: '2%', 
+      icon: Shield,
+      description: 'Encryption and user access control management.'
+    },
+  ];
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex justify-between items-end">

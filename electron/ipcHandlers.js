@@ -3,6 +3,25 @@ import db from './database.js';
 import fs from 'fs';
 import { printCheque, printBatch, printTest } from './print.js';
 
+// Auth Handlers
+ipcMain.handle('auth:signup', (event, { fullName, email, password }) => {
+  try {
+    const stmt = db.prepare('INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)');
+    const result = stmt.run(fullName, email, password);
+    return { success: true, userId: result.lastInsertRowid };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('auth:login', (event, { email, password }) => {
+  const user = db.prepare('SELECT * FROM users WHERE email = ? AND password = ?').get(email, password);
+  if (user) {
+    return { success: true, user: { id: user.id, fullName: user.full_name, email: user.email, role: user.role } };
+  }
+  return { success: false, error: 'Invalid email or password' };
+});
+
 // Settings Handlers
 ipcMain.handle('settings:get', () => {
   const settings = db.prepare('SELECT * FROM app_settings').all();
@@ -78,4 +97,18 @@ ipcMain.handle('print:batch', (event, payload) => {
 
 ipcMain.handle('print:test', () => {
   return printTest();
+});
+
+// System Handlers
+ipcMain.handle('sys:getStats', () => {
+  const recordCount = db.prepare('SELECT COUNT(*) as count FROM cheque_records').get().count;
+  const dbSize = fs.statSync(db.name).size;
+  const memory = process.memoryUsage();
+  
+  return {
+    recordCount,
+    dbSize: (dbSize / 1024).toFixed(2) + ' KB',
+    memory: (memory.heapUsed / 1024 / 1024).toFixed(2) + ' MB',
+    uptime: process.uptime()
+  };
 });

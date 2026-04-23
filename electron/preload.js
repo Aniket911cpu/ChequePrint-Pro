@@ -1,6 +1,9 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
+  // Auth
+  login: (credentials) => ipcRenderer.invoke('auth:login', credentials),
+  signup: (userData) => ipcRenderer.invoke('auth:signup', userData),
   // Printing
   printCheque: (payload) => ipcRenderer.invoke('print:cheque', payload),
   printBatch: (payload) => ipcRenderer.invoke('print:batch', payload),
@@ -21,4 +24,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   openFile: (filters) => ipcRenderer.invoke('dialog:openFile', filters),
   readFile: (path) => ipcRenderer.invoke('fs:readFile', path),
   readFileBinary: (path) => ipcRenderer.invoke('fs:readFileBinary', path),
+
+  // Systems
+  getSystemStats: () => ipcRenderer.invoke('sys:getStats'),
 });

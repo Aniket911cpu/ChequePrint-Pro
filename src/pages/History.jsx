@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Download, Search, Filter, Ban, CheckCircle2, MoreVertical } from 'lucide-react';
+import { Download, Search, Filter, CheckCircle2, MoreVertical, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 
 export default function History() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,12 +19,42 @@ export default function History() {
     r.cheque_number?.includes(searchTerm)
   );
 
-  const handleExport = async () => {
+  const handleExportCSV = async () => {
     try {
       await window.electronAPI.dbExport(filteredRecords);
       toast.success('Records exported successfully');
     } catch (error) {
       toast.error('Export failed');
+    }
+  };
+
+  const handleExportPDF = () => {
+    try {
+      const doc = new jsPDF();
+      doc.text('ChequePrint Pro — Audit Report', 14, 15);
+      doc.setFontSize(10);
+      doc.text(`Generated on: ${format(new Date(), 'dd MMM yyyy HH:mm')}`, 14, 22);
+      
+      const tableData = filteredRecords.map(r => [
+        format(new Date(r.printed_at), 'dd/MM/yyyy HH:mm'),
+        r.cheque_number || 'N/A',
+        r.payee_name,
+        `INR ${r.amount.toLocaleString('en-IN')}`,
+        r.status.toUpperCase()
+      ]);
+
+      doc.autoTable({
+        startY: 30,
+        head: [['Date', 'Cheque #', 'Payee', 'Amount', 'Status']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [168, 85, 247] } // Primary color
+      });
+
+      doc.save(`audit_report_${format(new Date(), 'yyyyMMdd_HHmm')}.pdf`);
+      toast.success('PDF Report generated');
+    } catch (error) {
+      toast.error('PDF generation failed');
     }
   };
 

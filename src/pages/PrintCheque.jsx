@@ -156,6 +156,38 @@ export default function PrintCheque() {
               />
             </div>
 
+            <div className="col-span-2 space-y-2">
+              <label className="text-sm font-medium">Digital Signature (Optional)</label>
+              <div className="flex gap-4 items-center">
+                <button 
+                  type="button"
+                  onClick={async () => {
+                    const path = await window.electronAPI.openFile([
+                      { name: 'Images', extensions: ['png', 'jpg', 'jpeg'] }
+                    ]);
+                    if (path) setValue('signature', path);
+                  }}
+                  className="card py-2 px-4 text-xs font-bold bg-white/5 hover:bg-white/10 p-0 border-dashed border border-white/20"
+                >
+                  {watch('signature') ? 'Change Signature' : 'Upload Signature'}
+                </button>
+                {watch('signature') && (
+                  <span className="text-[10px] text-green-500 font-bold uppercase truncate max-w-[200px]">
+                    {watch('signature').split('\\').pop()}
+                  </span>
+                )}
+                {watch('signature') && (
+                  <button 
+                    type="button"
+                    onClick={() => setValue('signature', '')}
+                    className="text-[10px] text-destructive font-bold uppercase hover:underline"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+            </div>
+
             <div className="col-span-2 pt-4 flex gap-4">
               <button type="submit" className="btn-primary flex-1 flex items-center justify-center gap-2">
                 <Printer className="w-5 h-5" /> Print Cheque

@@ -24,11 +24,11 @@ const recentActivity = [
   { id: 4, payee: 'Tech Solutions', amount: '₹1,20,000.00', date: 'Yesterday', status: 'Success' },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({ user }) {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div>
-        <h2 className="text-3xl font-bold gradient-text">Welcome back, Admin</h2>
+        <h2 className="text-3xl font-bold gradient-text">Welcome back, {user?.fullName || 'User'}</h2>
         <p className="text-muted-foreground">Here is what's happening with your cheque printing system today.</p>
       </div>
 

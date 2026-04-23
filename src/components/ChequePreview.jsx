@@ -37,6 +37,26 @@ export default function ChequePreview() {
     ? numberToIndianWords(Number(activeCheque.amount)) 
     : '';
 
+  const [sigUrl, setSigUrl] = React.useState('');
+
+  React.useEffect(() => {
+    const loadSignature = async () => {
+      if (activeCheque.signature) {
+        try {
+          const buffer = await window.electronAPI.readFileBinary(activeCheque.signature);
+          const blob = new Blob([buffer]);
+          const url = URL.createObjectURL(blob);
+          setSigUrl(url);
+        } catch (e) {
+          console.error('Failed to load signature', e);
+        }
+      } else {
+        setSigUrl('');
+      }
+    };
+    loadSignature();
+  }, [activeCheque.signature]);
+
   const getFieldValue = (fieldName) => {
     switch (fieldName) {
       case 'payee': return activeCheque.payee_name;
@@ -45,6 +65,7 @@ export default function ChequePreview() {
       case 'date_dd': return dateParts.dd;
       case 'date_mm': return dateParts.mm;
       case 'date_yyyy': return dateParts.yyyy;
+      case 'signature': return sigUrl;
       default: return '';
     }
   };
@@ -69,6 +90,23 @@ export default function ChequePreview() {
         {/* Fields */}
         {template.fields.map((field, idx) => {
           const value = getFieldValue(field.field_name);
+          if (field.field_name === 'signature' && value) {
+            return (
+              <img 
+                key={idx}
+                src={value}
+                alt="Signature"
+                className="absolute mix-blend-multiply transition-all duration-300"
+                style={{
+                  left: `${field.x_mm * scale}px`,
+                  top: `${field.y_mm * scale}px`,
+                  width: field.max_width_mm ? `${field.max_width_mm * scale}px` : '100px',
+                  height: 'auto',
+                }}
+              />
+            );
+          }
+          
           return (
             <div
               key={idx}
@@ -77,7 +115,7 @@ export default function ChequePreview() {
                 left: `${field.x_mm * scale}px`,
                 top: `${field.y_mm * scale}px`,
                 maxWidth: field.max_width_mm ? `${field.max_width_mm * scale}px` : 'none',
-                fontSize: `${field.font_size * 1.2}px`, // Slight boost for screen legibility
+                fontSize: `${field.font_size * 1.2}px`, 
                 fontWeight: field.is_bold ? 'bold' : 'normal',
                 color: value ? '#1a365d' : 'rgba(0,0,0,0.1)',
                 borderBottom: value ? 'none' : '1px dotted rgba(0,0,0,0.1)',

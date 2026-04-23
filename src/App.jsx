@@ -12,33 +12,35 @@ import Systems from './pages/Systems';
 import Auth from './pages/Auth';
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('auth_token') === 'true';
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('user_session');
+    return saved ? JSON.parse(saved) : null;
   });
+  
   const location = useLocation();
 
-  const handleLogin = () => {
-    localStorage.setItem('auth_token', 'true');
-    setIsAuthenticated(true);
+  const handleLogin = (userData) => {
+    localStorage.setItem('user_session', JSON.stringify(userData));
+    setUser(userData);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('auth_token');
-    setIsAuthenticated(false);
+    localStorage.removeItem('user_session');
+    setUser(null);
   };
 
-  if (!isAuthenticated) {
+  if (!user) {
     return <Auth onLogin={handleLogin} />;
   }
 
   return (
     <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">
-      <Sidebar onLogout={handleLogout} />
+      <Sidebar onLogout={handleLogout} user={user} />
       <main className="flex-1 overflow-y-auto overflow-x-hidden p-8 scroll-smooth">
         <div className="max-w-7xl mx-auto">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard user={user} />} />
             <Route path="/print" element={<PrintCheque />} />
             <Route path="/batch" element={<BatchPrint />} />
             <Route path="/history" element={<History />} />
