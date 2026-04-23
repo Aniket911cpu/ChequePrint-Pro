@@ -11,7 +11,10 @@ import {
   LayoutDashboard,
   CreditCard,
   Server,
-  LogOut
+  LogOut,
+  Sun,
+  Moon,
+  Users
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -20,20 +23,38 @@ function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-  { icon: Printer, label: 'Print Cheque', path: '/print' },
-  { icon: Files, label: 'Batch Print', path: '/batch' },
-  { icon: History, label: 'History', path: '/history' },
-  { icon: LayoutTemplate, label: 'Templates', path: '/templates' },
-  { icon: Server, label: 'Systems', path: '/systems' },
-  { icon: CreditCard, label: 'Plans & Pricing', path: '/pricing' },
-  { icon: Settings, label: 'Settings', path: '/settings' },
-];
+export default function Sidebar({ onLogout, user }) {
+  const [isDark, setIsDark] = React.useState(() => document.documentElement.classList.contains('dark'));
 
-export default function Sidebar({ onLogout }) {
+  const toggleTheme = () => {
+    const newDark = !isDark;
+    setIsDark(newDark);
+    if (newDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
+
+  const isAdmin = user?.role === 'Admin';
+
+  const mainNav = [
+    { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+    { icon: Printer, label: 'Print Cheque', path: '/print' },
+    { icon: Files, label: 'Batch Print', path: '/batch' },
+    { icon: History, label: 'History', path: '/history' },
+  ];
+
+  const adminNav = [
+    { icon: LayoutTemplate, label: 'Templates', path: '/templates' },
+    { icon: Server, label: 'Systems', path: '/systems' },
+    { icon: Users, label: 'User Mgmt', path: '/admin/users' },
+  ];
+
   return (
-    <aside className="w-72 h-screen flex flex-col glass-morphism border-r border-white/5 z-50">
+    <aside className="w-72 h-screen flex flex-col bg-card border-r border-border z-50 transition-all duration-300">
       <div className="p-8 flex items-center gap-4">
         <div className="relative group">
           <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full group-hover:bg-primary/40 transition-all duration-500" />
@@ -53,7 +74,8 @@ export default function Sidebar({ onLogout }) {
       </div>
 
       <nav className="flex-1 px-4 py-6 flex flex-col gap-1 overflow-y-auto">
-        {navItems.map((item) => (
+        <p className="px-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Main Menu</p>
+        {mainNav.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
@@ -67,21 +89,41 @@ export default function Sidebar({ onLogout }) {
             <ChevronRight className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-[.active]:opacity-50 group-[.active]:translate-x-0 group-hover:opacity-100 group-hover:translate-x-0" />
           </NavLink>
         ))}
+
+        {isAdmin && (
+          <>
+            <p className="px-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-6 mb-2">System Admin</p>
+            {adminNav.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) => cn(
+                  "sidebar-link group py-2.5",
+                  isActive && "active"
+                )}
+              >
+                <item.icon className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+                <span className="flex-1 font-medium">{item.label}</span>
+              </NavLink>
+            ))}
+          </>
+        )}
       </nav>
 
       <div className="p-6 mt-auto space-y-4">
-        <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 group cursor-pointer overflow-hidden relative">
-          <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-primary/10 blur-3xl transition-all duration-500 group-hover:bg-primary/20" />
-          <h3 className="text-xs font-bold mb-1">Backup Vault</h3>
-          <p className="text-[10px] text-muted-foreground mb-3">Cloud sync active</p>
-          <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-            <div className="h-full w-2/3 gradient-bg" />
-          </div>
+        <div className="flex items-center justify-between p-2 rounded-2xl bg-secondary/50 border border-border">
+          <span className="text-xs font-bold px-2 text-muted-foreground uppercase tracking-tighter">Theme</span>
+          <button 
+            onClick={toggleTheme}
+            className="p-2 rounded-xl bg-background shadow-sm hover:scale-110 transition-transform text-primary"
+          >
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
         </div>
 
         <button 
           onClick={onLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-red-500/10 hover:text-red-500 text-muted-foreground font-medium text-sm"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-destructive/10 hover:text-destructive text-muted-foreground font-medium text-sm"
         >
           <LogOut className="w-5 h-5" />
           Sign Out

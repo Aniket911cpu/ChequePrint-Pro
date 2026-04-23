@@ -112,3 +112,8 @@ ipcMain.handle('sys:getStats', () => {
     uptime: process.uptime()
   };
 });
+
+ipcMain.handle('print:getPrinters', async (event) => {
+  const win = new BrowserWindow({ show: false });
+  return await win.webContents.getPrintersAsync();
+});

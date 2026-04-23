@@ -60,8 +60,8 @@ export default function ChequePreview() {
   const getFieldValue = (fieldName) => {
     switch (fieldName) {
       case 'payee': return activeCheque.payee_name;
-      case 'amount_num': return activeCheque.amount ? `**${activeCheque.amount}/-**` : '';
-      case 'amount_words': return amountWords;
+      case 'amount_num': return activeCheque.amount ? `₹ ${activeCheque.amount.toLocaleString('en-IN')}/-` : '';
+      case 'amount_words': return amountWords ? `${amountWords} Only` : '';
       case 'date_dd': return dateParts.dd;
       case 'date_mm': return dateParts.mm;
       case 'date_yyyy': return dateParts.yyyy;
@@ -70,33 +70,49 @@ export default function ChequePreview() {
     }
   };
 
+  const getBgImage = () => {
+    if (activeCheque.bank_code === 'SBI') return '/src/assets/cheque_sbi.png';
+    if (activeCheque.bank_code === 'HDFC') return '/src/assets/cheque_hdfc.png';
+    return ''; // Fallback to blank
+  };
+
   return (
-    <div className="relative overflow-auto p-4 flex justify-center bg-black/20 rounded-3xl border border-white/5 shadow-inner">
+    <div className="relative overflow-auto p-8 flex justify-center bg-muted/50 rounded-[2.5rem] border border-border shadow-inner">
       <div 
-        className="relative bg-white text-black shadow-2xl rounded-sm transition-all duration-500 overflow-hidden"
+        className="relative bg-white text-black shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-sm transition-all duration-500 overflow-hidden border border-black/5"
         style={{ 
           width: `${width}px`, 
           height: `${height}px`,
-          backgroundImage: 'radial-gradient(#000 0.5px, transparent 0.5px)',
-          backgroundSize: '10px 10px',
-          backgroundOpacity: 0.05
+          backgroundImage: `url(${getBgImage()})`,
+          backgroundSize: '100% 100%',
+          backgroundRepeat: 'no-repeat'
         }}
       >
-        {/* Bank Name Display (Visual Mockup) */}
-        <div className="absolute top-4 left-6 text-sm font-bold uppercase tracking-tight opacity-20">
-          {template.bank_name}
-        </div>
+        {!getBgImage() && (
+          <div className="absolute inset-0 opacity-5" style={{ 
+            backgroundImage: 'radial-gradient(#000 0.5px, transparent 0.5px)',
+            backgroundSize: '10px 10px'
+          }} />
+        )}
+
+        {/* Bank Name fallback if no image */}
+        {!getBgImage() && (
+          <div className="absolute top-4 left-6 text-sm font-bold uppercase tracking-tight opacity-20">
+            {template.bank_name}
+          </div>
+        )}
 
         {/* Fields */}
         {template.fields.map((field, idx) => {
           const value = getFieldValue(field.field_name);
+          
           if (field.field_name === 'signature' && value) {
             return (
               <img 
                 key={idx}
                 src={value}
                 alt="Signature"
-                className="absolute mix-blend-multiply transition-all duration-300"
+                className="absolute mix-blend-multiply transition-all duration-300 pointer-events-none"
                 style={{
                   left: `${field.x_mm * scale}px`,
                   top: `${field.y_mm * scale}px`,
@@ -106,34 +122,29 @@ export default function ChequePreview() {
               />
             );
           }
+
+          const isDate = field.field_name.startsWith('date_');
           
           return (
             <div
               key={idx}
-              className="absolute font-serif leading-none transition-all duration-300"
+              className={`absolute transition-all duration-300 pointer-events-none ${isDate ? 'font-mono tracking-[0.4em]' : 'font-serif'}`}
               style={{
                 left: `${field.x_mm * scale}px`,
                 top: `${field.y_mm * scale}px`,
                 maxWidth: field.max_width_mm ? `${field.max_width_mm * scale}px` : 'none',
-                fontSize: `${field.font_size * 1.2}px`, 
-                fontWeight: field.is_bold ? 'bold' : 'normal',
-                color: value ? '#1a365d' : 'rgba(0,0,0,0.1)',
-                borderBottom: value ? 'none' : '1px dotted rgba(0,0,0,0.1)',
+                fontSize: `${field.font_size * 1.3}px`, 
+                fontWeight: field.is_bold ? '700' : '500',
+                color: value ? '#1a1a1a' : 'rgba(0,0,0,0.05)',
+                letterSpacing: isDate ? '0.5em' : 'normal',
+                transform: value ? 'none' : 'translateY(2px)',
+                opacity: value ? 1 : 0.5
               }}
             >
-              {value || field.field_name}
+              {value || (getBgImage() ? '' : field.field_name)}
             </div>
           );
         })}
-
-        {/* Decorative elements */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-8 items-end opacity-20">
-          <div className="w-24 h-4 border-b border-black text-[8px] text-center">PAYEE SIGNATURE</div>
-          <div className="w-32 h-6 border border-black/50 rounded flex items-center justify-center font-mono text-[10px]">
-            ||" 000000 ||" 000000000 |: 000000 |' 00
-          </div>
-          <div className="w-24 h-4 border-b border-black text-[8px] text-center">AUTHORIZED SIGNATORY</div>
-        </div>
       </div>
     </div>
   );

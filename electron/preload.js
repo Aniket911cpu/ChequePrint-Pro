@@ -27,4 +27,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // Systems
   getSystemStats: () => ipcRenderer.invoke('sys:getStats'),
+  getPrinters: () => ipcRenderer.invoke('print:getPrinters'),
 });
