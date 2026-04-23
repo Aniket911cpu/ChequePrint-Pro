@@ -40,10 +40,6 @@ export default function Sidebar({ onLogout, user }) {
     }
   };
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
-
   const isAdmin = user?.role === 'Admin';
 
   const mainNav = [
@@ -117,26 +113,6 @@ export default function Sidebar({ onLogout, user }) {
       </nav>
 
       <div className="p-6 mt-auto space-y-3">
-        <div className="flex items-center justify-between p-1 rounded-2xl bg-secondary/50 border border-border">
-          <button 
-            onClick={() => changeLanguage('en')}
-            className={cn(
-              "flex-1 py-1.5 text-[10px] font-black rounded-xl transition-all",
-              i18n.language === 'en' ? "bg-background shadow-sm text-primary" : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            EN
-          </button>
-          <button 
-            onClick={() => changeLanguage('hi')}
-            className={cn(
-              "flex-1 py-1.5 text-[10px] font-black rounded-xl transition-all",
-              i18n.language === 'hi' ? "bg-background shadow-sm text-primary" : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            HI
-          </button>
-        </div>
 
         <div className="flex items-center justify-between p-2 rounded-2xl bg-secondary/50 border border-border">
           <span className="text-xs font-bold px-2 text-muted-foreground uppercase tracking-tighter">{t('common.theme') || 'Theme'}</span>

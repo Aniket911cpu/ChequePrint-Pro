@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import TopBar from './components/TopBar';
 import Dashboard from './pages/Dashboard';
 import PrintCheque from './pages/PrintCheque';
 import BatchPrint from './pages/BatchPrint';
@@ -61,8 +62,10 @@ export default function App() {
   return (
     <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">
       <Sidebar onLogout={handleLogout} user={user} />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden p-8 scroll-smooth bg-secondary/20">
-        <div className="max-w-7xl mx-auto">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <TopBar user={user} onLogout={handleLogout} />
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-8 scroll-smooth bg-secondary/20">
+          <div className="max-w-7xl mx-auto">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard user={user} />} />
@@ -77,7 +80,8 @@ export default function App() {
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

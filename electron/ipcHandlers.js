@@ -62,7 +62,10 @@ ipcMain.handle('db:getTemplates', () => {
   }));
 });
 
-ipcMain.handle('db:getCalibration', (event, templateId) => {
+ipcMain.handle('db:getCalibration', (event, templateId, printerName) => {
+  if (printerName) {
+    return db.prepare('SELECT * FROM printer_calibration WHERE template_id = ? AND printer_name = ?').get(templateId, printerName);
+  }
   return db.prepare('SELECT * FROM printer_calibration WHERE template_id = ?').all(templateId);
 });
 

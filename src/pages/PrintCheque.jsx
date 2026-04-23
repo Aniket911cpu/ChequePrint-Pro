@@ -37,9 +37,12 @@ export default function PrintCheque() {
 
   // Stable reactive read for the amount field only
   const amount = useWatch({ control, name: 'amount' });
+  const bankCode = useWatch({ control, name: 'bank_code' });
+  const targetPrinter = useWatch({ control, name: 'target_printer' });
   const amountInWords = amount ? numberToIndianWords(Number(amount)) : '';
 
   const [printers, setPrinters] = React.useState([]);
+  const [currentCalibration, setCurrentCalibration] = React.useState({ offset_x_mm: 0, offset_y_mm: 0 });
 
   React.useEffect(() => {
     const fetchPrinters = async () => {
@@ -48,6 +51,22 @@ export default function PrintCheque() {
     };
     fetchPrinters();
   }, []);
+
+  React.useEffect(() => {
+    const fetchCalibration = async () => {
+      if (!bankCode || !targetPrinter) return;
+      const template = bankTemplates.find(t => t.bank_code === bankCode);
+      if (template) {
+        const calib = await window.electronAPI.getCalibration(template.id, targetPrinter);
+        if (calib) {
+          setCurrentCalibration({ offset_x_mm: calib.offset_x_mm, offset_y_mm: calib.offset_y_mm });
+        } else {
+          setCurrentCalibration({ offset_x_mm: 0, offset_y_mm: 0 });
+        }
+      }
+    };
+    fetchCalibration();
+  }, [bankCode, targetPrinter]);
 
   const onSubmit = async (data) => {
     try {
@@ -67,7 +86,10 @@ export default function PrintCheque() {
           amount_words: amountInWords
         },
         template,
-        offsets: { x_mm: 0, y_mm: 0 },
+        offsets: { 
+          x_mm: currentCalibration.offset_x_mm, 
+          y_mm: currentCalibration.offset_y_mm 
+        },
         printerName: data.target_printer
       });
       
